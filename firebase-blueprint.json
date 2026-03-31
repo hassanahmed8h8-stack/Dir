@@ -1,0 +1,30 @@
+{
+  "entities": {
+    "Property": {
+      "title": "Property",
+      "description": "Represents a real estate property.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "string" },
+        "location": { "type": "string" },
+        "type": { "type": "string" },
+        "bedrooms": { "type": "number" },
+        "bathrooms": { "type": "number" },
+        "area": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "features": { "type": "array", "items": { "type": "string" } },
+        "status": { "type": "string", "enum": ["متاح", "تم البيع"] },
+        "googleMapsLink": { "type": "string" }
+      },
+      "required": ["title", "description", "price", "location", "type", "area", "imageUrl", "status"]
+    }
+  },
+  "firestore": {
+    "/properties/{propertyId}": {
+      "schema": "Property",
+      "description": "Collection of real estate properties."
+    }
+  }
+}
