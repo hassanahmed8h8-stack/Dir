@@ -40,8 +40,9 @@ export default function AdminDashboard() {
       await updateDoc(propertyRef, {
         status: property.status === 'متاح' ? 'تم البيع' : 'متاح'
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating status:", error);
+      alert("حدث خطأ أثناء تحديث الحالة: " + error.message);
     }
   };
 
@@ -50,8 +51,9 @@ export default function AdminDashboard() {
     try {
       await deleteDoc(doc(db, 'properties', propertyToDelete));
       setPropertyToDelete(null);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error deleting property:", error);
+      alert("حدث خطأ أثناء الحذف: " + error.message);
       setPropertyToDelete(null);
     }
   };
@@ -67,8 +69,9 @@ export default function AdminDashboard() {
       }
       setIsFormOpen(false);
       setEditingProperty(undefined);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error saving property:", error);
+      alert("حدث خطأ أثناء حفظ العقار: " + error.message);
     }
   };
 
