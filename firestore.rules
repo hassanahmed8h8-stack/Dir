@@ -34,7 +34,7 @@ service cloud.firestore {
     }
     
     function isAdmin() {
-      return isAuthenticated() && (request.auth.token.email == 'admin@dar.com' || request.auth.token.email == 'hassanahmed8h8@gmail.com');
+      return isAuthenticated() && request.auth.token.email == 'admin@dar.com';
     }
     
     function hasRequiredFields(fields) {

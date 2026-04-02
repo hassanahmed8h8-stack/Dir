@@ -12,7 +12,7 @@ export default function Admin() {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         // Check if the user is the admin
-        if (user.email === 'hassanahmed8h8@gmail.com' || user.email === 'admin@dar.com') {
+        if (user.email === 'admin@dar.com') {
           setIsAuthenticated(true);
         } else {
           // If not admin, sign them out and don't authenticate
