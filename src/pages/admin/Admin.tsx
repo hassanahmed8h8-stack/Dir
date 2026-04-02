@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import AdminLogin from './AdminLogin';
 import AdminDashboard from './AdminDashboard';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '../../firebase';
 
 export default function Admin() {
@@ -9,8 +9,20 @@ export default function Admin() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setIsAuthenticated(!!user);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Check if the user is the admin
+        if (user.email === 'hassanahmed8h8@gmail.com' || user.email === 'admin@dar.com') {
+          setIsAuthenticated(true);
+        } else {
+          // If not admin, sign them out and don't authenticate
+          await signOut(auth);
+          setIsAuthenticated(false);
+          alert('عذراً، هذا الحساب ليس لديه صلاحيات الإدارة.');
+        }
+      } else {
+        setIsAuthenticated(false);
+      }
       setIsLoading(false);
     });
 

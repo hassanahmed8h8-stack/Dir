@@ -33,6 +33,10 @@ service cloud.firestore {
       return request.auth != null;
     }
     
+    function isAdmin() {
+      return isAuthenticated() && (request.auth.token.email == 'admin@dar.com' || request.auth.token.email == 'hassanahmed8h8@gmail.com');
+    }
+    
     function hasRequiredFields(fields) {
       return request.resource.data.keys().hasAll(fields);
     }
@@ -69,9 +73,9 @@ service cloud.firestore {
       allow read: if true;
       
       // Only authenticated users (admins) can create, update, or delete properties
-      allow create: if isAuthenticated() && isValidProperty();
-      allow update: if isAuthenticated() && isValidProperty();
-      allow delete: if isAuthenticated();
+      allow create: if isAdmin() && isValidProperty();
+      allow update: if isAdmin() && isValidProperty();
+      allow delete: if isAdmin();
     }
   }
 }

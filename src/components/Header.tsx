@@ -1,6 +1,36 @@
-import { Phone, MapPin } from 'lucide-react';
+import { Phone, MapPin, LogIn, LogOut, User } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { auth, googleProvider } from '../firebase';
+import { signInWithPopup, signOut, onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
 
 export default function Header() {
+  const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setIsLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleLogin = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (error) {
+      console.error('Error signing in with Google:', error);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
   return (
     <header className="bg-brand-black text-white sticky top-0 z-50 shadow-md border-b-4 border-brand-orange">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -35,6 +65,41 @@ export default function Header() {
               <Phone size={18} />
               <span dir="ltr">+964 775 099 9818</span>
             </a>
+            
+            {/* Auth Section */}
+            {!isLoading && (
+              <div className="border-r border-gray-700 pr-6 mr-2">
+                {user ? (
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      {user.photoURL ? (
+                        <img src={user.photoURL} alt={user.displayName || 'User'} className="w-8 h-8 rounded-full border border-gray-600" referrerPolicy="no-referrer" />
+                      ) : (
+                        <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center border border-gray-600">
+                          <User size={16} className="text-gray-300" />
+                        </div>
+                      )}
+                      <span className="text-sm font-medium text-gray-300 hidden lg:block">{user.displayName || 'مستخدم'}</span>
+                    </div>
+                    <button 
+                      onClick={handleLogout}
+                      className="text-gray-400 hover:text-red-400 transition-colors flex items-center gap-1 text-sm"
+                      title="تسجيل خروج"
+                    >
+                      <LogOut size={18} />
+                    </button>
+                  </div>
+                ) : (
+                  <button 
+                    onClick={handleLogin}
+                    className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors font-medium text-sm"
+                  >
+                    <LogIn size={18} />
+                    <span>تسجيل الدخول</span>
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
